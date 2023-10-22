@@ -1,20 +1,22 @@
 import React from 'react';
-import { View, DimensionValue } from 'react-native';
+import { View, DimensionValue, ActivityIndicator } from 'react-native';
 import { styles } from './styles';
-import { Text } from '@rneui/themed';
+import { Image } from '@rneui/themed';
+import { Images } from '../../../assets';
 
 type Props = {
   height?: DimensionValue;
   width?: DimensionValue;
 };
 
-const Brand: React.FC<Props> = ({ height, width }: Props) => {
+const Brand: React.FC<Props> = () => {
   return (
-    <View
-      testID="brand-img-wrapper"
-      style={[styles.brandContainer, { height, width }]}
-    >
-      <Text h1>Naveen Kumar</Text>
+    <View testID="brand-img-wrapper" style={styles.brandContainer}>
+      <Image
+        style={styles.logo}
+        source={Images.LEHER_LOGO}
+        PlaceholderContent={<ActivityIndicator size="large" />}
+      />
     </View>
   );
 };

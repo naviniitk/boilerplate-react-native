@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { Brand } from '../../components';
 import { ApplicationScreenProps } from '../../../@types/navigation';
 
@@ -15,7 +15,7 @@ const Startup: React.FC<ApplicationScreenProps> = ({
 
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Main' }],
+      routes: [{ name: 'Login' }],
     });
   };
 
@@ -26,7 +26,6 @@ const Startup: React.FC<ApplicationScreenProps> = ({
   return (
     <View>
       <Brand />
-      <ActivityIndicator size="large" />
     </View>
   );
 };

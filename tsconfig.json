@@ -7,9 +7,11 @@
       "./node_modules/@types"
     ],
     "baseUrl": "..",
+    "rootDir": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "types/*": ["./@types/*"]
+      "types/*": ["./@types/*"],
+      "react": ["./node_modules/@types/react"]
     }
   }
 }
