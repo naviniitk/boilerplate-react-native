@@ -38,29 +38,35 @@ jobs:
         check: ['yarn:lint', 'compose:test']
     steps:
       - name: Checkout (app)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
         with:
-          path: app
+          node-version: "16.x"
+
+      - name: Install packages
+        run: yarn install
 
       - name: Run check
-        uses: ./app/.github/actions/check
+        uses: ./.github/actions/check
         with:
           check: ${{ matrix.check }}
-  
-  deploy:
-    runs-on: ubuntu-latest
-    steps: 
-      - name: Export environment variables
-        shell: bash
-        run: echo "export RELEASE_KEYSTORE=`cat ${{ secrets.RELEASE_KEYSTORE }}` RELEASE_KEYSTORE_PASSPHRASE=${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }} SERVICE_ACCOUNT=`cat ${{ secrets.SERVICE_ACCOUNT }}` SERVICE_ACCOUNT_PASSPHRASE=${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}" >> .env
 
-      - name: Decrypt Android keys
-        run: docker run -t boilerplate-react-native /bin/bash -c "source .env sh scripts/decrypt_android_keys.sh"
-        # env: 
-        #   RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-        #   RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
-        #   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-        #   SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
+  
+  # deploy:
+  #   runs-on: ubuntu-latest
+  #   steps: 
+  #     - name: Export environment variables
+  #       shell: bash
+  #       run: echo "export RELEASE_KEYSTORE=`cat ${{ secrets.RELEASE_KEYSTORE }}` RELEASE_KEYSTORE_PASSPHRASE=${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }} SERVICE_ACCOUNT=`cat ${{ secrets.SERVICE_ACCOUNT }}` SERVICE_ACCOUNT_PASSPHRASE=${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}" >> .env
+
+  #     - name: Decrypt Android keys
+  #       run: docker run -t boilerplate-react-native /bin/bash -c "source .env sh scripts/decrypt_android_keys.sh"
+  #       # env: 
+  #       #   RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+  #       #   RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
+  #       #   SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+  #       #   SERVICE_ACCOUNT_PASSPHRASE: ${{ secrets.SERVICE_ACCOUNT_PASSPHRASE }}
       
-      - name: Upload to PlayStore 
-        run: docker run -t boilerplate-react-native /bin/sh -c 'cd android && fastlane android release_production RELEASE_KEYSTORE_PASSWORD:${{secrets.RELEASE_KEYSTORE_PASSWORD}} RELEASE_KEYSTORE_KEY_PASSWORD:${{secrets.RELEASE_KEYSTORE_KEY_PASSWORD}} RELEASE_KEYSTORE_ALIAS:${{secrets.RELEASE_KEYSTORE_ALIAS}}'
+  #     - name: Upload to PlayStore 
+  #       run: docker run -t boilerplate-react-native /bin/sh -c 'cd android && fastlane android release_production RELEASE_KEYSTORE_PASSWORD:${{secrets.RELEASE_KEYSTORE_PASSWORD}} RELEASE_KEYSTORE_KEY_PASSWORD:${{secrets.RELEASE_KEYSTORE_KEY_PASSWORD}} RELEASE_KEYSTORE_ALIAS:${{secrets.RELEASE_KEYSTORE_ALIAS}}'

@@ -54,3 +54,35 @@ jobs:
         uses: ./.github/actions/check
         with:
           check: ${{ matrix.check }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: "16.x"
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.1.2'
+
+    - name: Install Fastlane
+      run: cd android && bundle install && cd ..
+
+    - name: Install packages
+      run: yarn install
+
+    - name: Decrypt Android keys
+      env: 
+        RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+        RELEASE_KEYSTORE_PASSPHRASE: ${{ secrets.RELEASE_KEYSTORE_PASSPHRASE }}
+        RELEASE_KEYSTORE_KEY_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_KEY_PASSWORD }}
+        RELEASE_KEYSTORE_ALIAS: ${{ secrets.RELEASE_KEYSTORE_ALIAS }}
+      run: |
+        mkdir -p android/fastlane/config
+        echo "$RELEASE_KEYSTORE" > upload-keystore.jks.asc
+        gpg -d --passphrase="$RELEASE_KEYSTORE_PASSPHRASE" --batch upload-keystore.jks.asc > android/fastlane/config/upload-keystore.jks
+       
+    - name: Upload to PlayStore 
+      run: cd android && fastlane android release_production RELEASE_KEYSTORE_PASSWORD:${{secrets.RELEASE_KEYSTORE_PASSWORD}} RELEASE_KEYSTORE_KEY_PASSWORD:${{secrets.RELEASE_KEYSTORE_KEY_PASSWORD}} RELEASE_KEYSTORE_ALIAS:${{secrets.RELEASE_KEYSTORE_ALIAS}}
