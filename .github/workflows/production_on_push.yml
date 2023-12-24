@@ -33,7 +33,7 @@ jobs:
         check: ['yarn:lint', 'compose:test']
     steps:
       - name: Checkout (app)
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         # with:
         #   path: app
       - uses: actions/setup-node@v1
