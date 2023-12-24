@@ -23,7 +23,7 @@ const appTheme = createTheme({
       containerStyle: {
         marginTop: 10,
         borderRadius: 32,
-        backgroundColor: 'blue'
+        backgroundColor: 'blue',
       },
       buttonStyle: {
         borderRadius: 32,
