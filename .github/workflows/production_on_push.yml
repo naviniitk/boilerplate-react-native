@@ -51,6 +51,6 @@ jobs:
         run: yarn install
 
       - name: Run check
-        uses: ./app/.github/actions/check
+        uses: ./.github/actions/check
         with:
           check: ${{ matrix.check }}
